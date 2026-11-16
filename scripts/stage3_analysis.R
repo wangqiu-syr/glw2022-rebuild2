@@ -214,6 +214,7 @@ d5 <- do.call(rbind, lapply(names(SIMS), function(s) {
         data.frame(sim = s, estimator = p$estimator, measure = "MSE", value = p$mse))
 }))
 d5$estimator <- factor(d5$estimator, rev(ESTIMATORS)); d5$sim <- factor(d5$sim, c("sim1", "sim2"), c("Simulation 1", "Simulation 2"))
+d5$measure <- factor(d5$measure, c("|bias| against tau_super", "MSE"))
 m5 <- aggregate(value ~ sim + estimator + measure, d5, mean)
 g5 <- ggplot(d5, aes(value, estimator)) +
   geom_point(colour = "#b9b8b2", size = 1.4, position = position_jitter(height = 0.12, seed = 1)) +
@@ -276,13 +277,13 @@ L <- c(L, "## Simulation 2 (A = 9, n_t = 200; tau_super = 0 for all pairs)", "",
 ovt <- ov[ov$truth == "tau_super", ]
 L <- c(L, "## All estimators, including the GPS sensitivity variants", "",
        "Means over pairs (against tau_super):", "",
-       md_table(data.frame(sim = ovt$sim, estimator = ovt$estimator, `mean |bias|` = f4(ovt$abs_bias),
-                           `max |bias|` = f4(ovt$max_abs_bias), `mean MSE` = f4(ovt$mse),
+       md_table(data.frame(sim = ovt$sim, estimator = ovt$estimator, `mean abs bias` = f4(ovt$abs_bias),
+                           `max abs bias` = f4(ovt$max_abs_bias), `mean MSE` = f4(ovt$mse),
                            `mean SD` = f4(ovt$sd), check.names = FALSE)), "")
 ovm <- ov[ov$truth == "tau_mix", ]
 L <- c(L, "Against tau_mix, the estimand that CM and GPS target under the equal-group-size design (D4):", "",
-       md_table(data.frame(sim = ovm$sim, estimator = ovm$estimator, `mean |bias|` = f4(ovm$abs_bias),
-                           `max |bias|` = f4(ovm$max_abs_bias), `mean MSE` = f4(ovm$mse), check.names = FALSE)), "")
+       md_table(data.frame(sim = ovm$sim, estimator = ovm$estimator, `mean abs bias` = f4(ovm$abs_bias),
+                           `max abs bias` = f4(ovm$max_abs_bias), `mean MSE` = f4(ovm$mse), check.names = FALSE)), "")
 
 ## agreement
 L <- c(L, "## Agreement with the paper", "",

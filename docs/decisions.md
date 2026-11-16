@@ -393,6 +393,12 @@ DGP to fit these numbers. Stage 3 will show whether the simulated DIF agrees wit
 the population calculation, and the remaining gap will be reported as a
 discrepancy with the paper.
 
+**Stage 3 status.** At R = 500 the simulated DIF bias agrees with the population
+calculation: |z| ≤ 2.4 over the 6 Sim 1 pairs and ≤ 1.9 over the 36 Sim 2 pairs,
+in Monte Carlo SE units. Our implementation therefore matches the specified DGP,
+and the gap with the paper's DIF column (sign-aligned correlation 0.958, 8 of 36
+pairs within 2 SE) is reported as a discrepancy with the paper.
+
 ---
 
 ## D21. Sim 1 outcomes are not centred — impact L
