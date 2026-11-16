@@ -23,7 +23,8 @@ for (s in names(SIMS)) {
                    by = c("rep", "estimator", "t", "tprime")),
              ex$sate[, c("rep", "t", "tprime", "sate")], by = c("rep", "t", "tprime"))
   d <- merge(d, tr[, c("t", "tprime", "tau_super", "tau_mix")], by = c("t", "tprime"))
-  write.csv(d[order(d$estimator, d$t, d$tprime, d$rep), ], file.path("results", s, "intervals.csv"), row.names = FALSE)
+  zz <- gzfile(file.path("results", s, "intervals.csv.gz"), "w")
+  write.csv(d[order(d$estimator, d$t, d$tprime, d$rep), ], zz, row.names = FALSE); close(zz)
   key <- interaction(d$estimator, d$t, d$tprime, drop = TRUE)
   cv <- do.call(rbind, lapply(split(d, key), function(g) {
     se <- sqrt(g$var_full); sd_mc <- sd(g$est)
@@ -100,7 +101,7 @@ gs <- ggplot(ds, aes(se_ratio, estimator)) +
   geom_vline(xintercept = 1, colour = INK2, linewidth = 0.4, linetype = "dashed") +
   geom_point(colour = "#b9b8b2", size = 1.4, position = position_jitter(height = 0.12, seed = 1)) +
   geom_point(data = ms, colour = COL_OURS, size = 3.2) +
-  facet_wrap(~sim, nrow = 1) + theme_viz +
+  facet_wrap(~sim, nrow = 1) + theme_viz + scale_x_continuous(breaks = c(0.9, 1, 1.2, 1.4, 1.6)) +
   labs(x = "mean estimated SE / Monte Carlo SD of the estimates", y = NULL,
        title = "Calibration of the estimated standard errors",
        subtitle = "Grey: one point per pairwise effect. Blue: mean over pairs. 1 = calibrated.")
@@ -130,6 +131,6 @@ for (s in names(SIMS)) {
   L <- c(L, sprintf("## %s: coverage (%%) against tau_super, by pair", ifelse(s == "sim1", "Simulation 1", "Simulation 2")), "",
          md_table(tab), "")
 }
-L <- c(L, "Per-pair details (all coverage types, SE ratio, share of variance from the units term): `results/<sim>/coverage.csv`; per-replication intervals: `results/<sim>/intervals.csv`. Figures: `figures/coverage_vs_paper.png`, `figures/se_calibration.png`.")
+L <- c(L, "Per-pair details (all coverage types, SE ratio, share of variance from the units term): `results/<sim>/coverage.csv`; per-replication intervals: `results/<sim>/intervals.csv.gz`. Figures: `figures/coverage_vs_paper.png`, `figures/se_calibration.png`.")
 writeLines(L, "results/stage4_report.md")
 cat(L[1:20], sep = "\n")

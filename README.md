@@ -17,15 +17,15 @@ not in this repository (copyright).
 |---|---|---|
 | 1 | Specification, decisions, paper's tables as CSV | done (reviewed) |
 | 2 | Code in `R/`, tests, population truths, pilot run | done (reviewed) |
-| 3 | Full runs (500 replications each): bias, \|bias\|, MSE against the paper | **done, awaiting review** |
-| 4 | Intervals and coverage (optional) | not started |
+| 3 | Full runs (500 replications each): bias, \|bias\|, MSE against the paper | done (reviewed); CM metric sensitivity added |
+| 4 | Intervals and coverage | **done, awaiting review** |
 
 ## Layout
 
 | Path | Content |
 |---|---|
 | [`docs/spec.md`](docs/spec.md) | DGP, estimators, true effects, performance measures, replications |
-| [`docs/decisions.md`](docs/decisions.md) | 25 recorded choices where the paper is unclear or inconsistent, or where implementation needed a choice |
+| [`docs/decisions.md`](docs/decisions.md) | 26 recorded choices where the paper is unclear or inconsistent, or where implementation needed a choice |
 | [`data/paper/`](data/paper) | the paper's Tables 1 and 3 as CSV (checked) |
 | `R/config.R` | simulation settings (A, n per group, master seeds, estimators) |
 | `R/dgp.R` | covariates, treatment model, outcomes, group-filling sampler |
@@ -44,6 +44,8 @@ not in this repository (copyright).
 | `results/agreement_with_paper.csv`, `results/estimator_overview.csv` | summary tables |
 | `figures/` | comparisons with the paper's tables |
 | `results/runs_cm_metrics/`, `results/cm_metric_sensitivity/` | CM distance-metric sensitivity (D9) |
+| `R/variance.R`, `results/runs_stage4/` | Stage 4 variance estimators (D26) and per-replication runs |
+| [`results/stage4_report.md`](results/stage4_report.md), `results/<sim>/coverage.csv`, `results/coverage_summary.csv` | coverage tables; per-replication intervals in `results/<sim>/intervals.csv.gz` |
 | `results/stage1/` | stage-1 diagnostic outputs |
 
 Estimators computed in every replication: `DIF`, `CM`, `GPS` (main-effects
@@ -64,6 +66,8 @@ Rscript scripts/run_simulations.R sim1,sim2 1 500 results/runs 4  # full runs (~
 Rscript scripts/stage3_analysis.R                             # tables, report and figures (~1 min)
 Rscript scripts/run_extra.R cm_metrics sim1,sim2 1 500 results/runs_cm_metrics 4  # CM metrics (~2.5 min)
 Rscript scripts/cm_metric_analysis.R
+Rscript scripts/run_extra.R stage4 sim1,sim2 1 500 results/runs_stage4 4      # variances (~3.5 min)
+Rscript scripts/stage4_analysis.R                             # coverage tables and figures
 ```
 
 `run_simulations.R` saves each replication as it finishes and skips finished ones
@@ -141,6 +145,38 @@ the gap.
 * CM keeps a clear bias even against $\tau_{mix}$ (33 of 36 pairs significant in
   Sim 2). This is consistent with residual covariate differences in one-to-one
   matching on seven covariates with 100–200 donors per group.
+
+## Intervals and coverage (Stage 4)
+
+The paper does not say how its intervals were built. Here the interval is the
+estimate ± 1.96 × an analytic SE derived from the estimator's linear-weight form
+(D26). That SE has two parts: outcome noise, estimated by nearest-neighbour
+differencing in the estimator's own metric, and the variation from which units
+are drawn, under the fixed-group-size design. Coverage of 95% intervals for
+τ_super (`results/stage4_report.md`, `figures/coverage_vs_paper.png`):
+
+| | Sim 1 ours | Sim 1 paper | Sim 2 ours | Sim 2 paper | SE / Monte Carlo SD (Sim 1, Sim 2) |
+|---|---|---|---|---|---|
+| CM | 94.5 [92.0, 97.2] | 95.0 [92, 98] | 90.3 [63.4, 98.0] | 97.1 [92, 100] | 1.05, 1.14 |
+| GPS | 99.8 [99.6, 100] | 99.7 [99, 100] | 99.7 [98.6, 100] | 98.9 [96, 100] | 1.58, 1.51 |
+| GPS_true | 94.4 | – | 94.2 | – | 0.98, 1.00 |
+| DIF | 86.9 | – | 79.8 | – | 0.98, 1.01 |
+
+Values are mean [min, max] over pairs, in %. The Monte Carlo SE of a coverage
+near 95% is about 1 point.
+
+* **GPS's over-coverage is reproduced, and explained.** The SE is calibrated
+  when matching on the true scores (ratio 1.0, coverage 94%). With estimated
+  scores it is about 1.5× too large, because the estimator then varies much
+  less (SD 0.76–0.79 vs 1.23–1.25 with the true scores). The variance formula,
+  like any that ignores score estimation, misses that reduction. Coverage of
+  99.7–99.8% matches the paper's 99–100%.
+* **CM matches the paper in Sim 1** (94.5% vs 95.0%). In Sim 2 it under-covers
+  for the pairs with the largest bias: per-pair coverage correlates −0.92 with
+  |bias|/SD, and even the oracle interval built from the true SD covers only
+  85.6% on average. This follows from the Stage 3 finding that our CM is more
+  biased than the paper's.
+* DIF under-covers because of its confounding bias. Its SE is calibrated.
 
 ## Stage 1 findings (details in `docs/decisions.md`)
 
