@@ -227,6 +227,15 @@ written. $Z_3$ (binary) is included in the $Z$ block.
 by analogy. The divisor ($n$ vs $n-1$) rescales both blocks by the same factor and
 cannot change the argmin.
 
+**Sensitivity check (after Stage 3, at your request).** CM was rerun under (b)
+and (c) on the same 500 + 500 data sets (`results/cm_metric_sensitivity/`,
+`figures/cm_metric_sensitivity_sim2.png`). The metric makes little difference.
+Sim 2 mean |bias| is 0.299 (a), 0.304 (b) and 0.266 (c), against the paper's
+0.139. The paper's CM bias is about a third of ours under every metric (slope
+0.32–0.35), and mean MSE is 0.29 in all three. Sim 1 mean |bias| is 0.166, 0.179
+and 0.146, against the paper's 0.143. So the metric does not explain why the
+paper's CM is less biased. (a) stays the primary choice.
+
 ---
 
 ## D10. Matching details — impact M

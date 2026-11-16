@@ -34,7 +34,7 @@ not in this repository (copyright).
 | `R/truth.R` | τ_super (analytic), τ_mix and other population quantities (Monte Carlo integration) |
 | `R/rng.R`, `R/run.R` | per-replication random streams; resumable parallel runner; result collection |
 | `R/performance.R` | bias, \|bias\|, MSE, SD, Monte Carlo SEs |
-| `tests/testthat/` | 87 tests, including hand-worked examples |
+| `tests/testthat/` | 111 tests, including hand-worked examples |
 | `scripts/` | drivers: tests, truths, simulation runs, pilot summary, stage-1 checks |
 | `results/truth/` | population truths per simulation |
 | `results/pilot/` | 20-replication pilot: per-replication files, performance preview, timing |
@@ -43,6 +43,7 @@ not in this repository (copyright).
 | [`results/stage3_report.md`](results/stage3_report.md) | all Stage 3 tables, side by side with the paper |
 | `results/agreement_with_paper.csv`, `results/estimator_overview.csv` | summary tables |
 | `figures/` | comparisons with the paper's tables |
+| `results/runs_cm_metrics/`, `results/cm_metric_sensitivity/` | CM distance-metric sensitivity (D9) |
 | `results/stage1/` | stage-1 diagnostic outputs |
 
 Estimators computed in every replication: `DIF`, `CM`, `GPS` (main-effects
@@ -55,12 +56,14 @@ R 4.3.3 from the Ubuntu 24.04 archive (`r-base-core`, `r-cran-testthat`; `r-cran
 and `r-cran-mass` for one test and the stage-1 scripts). From the repository root:
 
 ```sh
-Rscript scripts/run_tests.R                                   # 87 tests (~5 s)
+Rscript scripts/run_tests.R                                   # 111 tests (~10 s)
 Rscript scripts/compute_truth.R                               # population truths (~2.5 min, 4 cores)
 Rscript scripts/run_simulations.R sim1,sim2 1 20 results/pilot/runs 4   # pilot (~10 s)
 Rscript scripts/pilot_summary.R                               # results/pilot/pilot_summary.md
 Rscript scripts/run_simulations.R sim1,sim2 1 500 results/runs 4  # full runs (~2.5 min)
 Rscript scripts/stage3_analysis.R                             # tables, report and figures (~1 min)
+Rscript scripts/run_extra.R cm_metrics sim1,sim2 1 500 results/runs_cm_metrics 4  # CM metrics (~2.5 min)
+Rscript scripts/cm_metric_analysis.R
 ```
 
 `run_simulations.R` saves each replication as it finishes and skips finished ones
@@ -114,6 +117,12 @@ The largest Monte Carlo SE of any bias here is 0.06.
 * **Some DIF biases.** The pairs flagged at Stage 1 still differ (D20), e.g. Sim 1
   τ(1,3): 1.14 here vs 0.47 in the paper. Because our DIF matches its population
   value, the gap lies in the paper's numbers or in an unstated detail of its DGP.
+
+**CM distance-metric sensitivity** (D9, `results/cm_metric_sensitivity/report.md`).
+Rerunning CM with one Mahalanobis distance on all seven covariates, or with
+Mahalanobis on X plus Euclidean on Z, changes little. Sim 2 mean |bias| is
+0.27–0.30 under all three metrics (paper 0.14), so the metric does not explain
+the gap.
 
 **GPS sensitivity variants.**
 * The correctly specified logit (`GPS_cs`) gives about the same bias as the

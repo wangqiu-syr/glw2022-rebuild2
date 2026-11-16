@@ -31,7 +31,8 @@ rep_file <- function(outdir, r) file.path(outdir, sprintf("rep_%04d.rds", r))
 ## Runs replications `reps` of simulation `cfg`, in parallel, saving each
 ## replication to its own file as soon as it finishes. Replications whose
 ## file already exists are skipped, so an interrupted run can be resumed.
-run_simulation <- function(cfg, reps, outdir, cores = 4L, log_file = NULL) {
+run_simulation <- function(cfg, reps, outdir, cores = 4L, log_file = NULL,
+                           rep_fun = run_replication) {
   dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
   seeds <- replication_seeds(cfg$master_seed, max(reps))
   todo <- reps[!file.exists(rep_file(outdir, reps))]
@@ -41,7 +42,7 @@ run_simulation <- function(cfg, reps, outdir, cores = 4L, log_file = NULL) {
   }
   logmsg(cfg$name, ": ", length(reps) - length(todo), " done, ", length(todo), " to run")
   one <- function(r) {
-    res <- run_replication(cfg, r, seeds[[r]])
+    res <- rep_fun(cfg, r, seeds[[r]])
     tmp <- paste0(rep_file(outdir, r), ".tmp")
     saveRDS(res, tmp); file.rename(tmp, rep_file(outdir, r))   # atomic write
     logmsg(cfg$name, " rep ", r, " (", round(res$diag$seconds, 2), " s)")
@@ -71,4 +72,56 @@ collect_simulation <- function(outdir) {
   }))
   diag <- do.call(rbind, lapply(res, `[[`, "diag"))
   list(estimates = est, sate = sate, varsum = vary, diag = diag)
+}
+
+## ---------------------------------------------------------------------------
+## Extra runs on the same data sets (same streams, so replication r reproduces
+## the Stage-3 data set r exactly).
+
+## CM distance-metric sensitivity (D9 options a, b, c).
+CM_METRICS <- c(CM = "blocks", CM_stacked = "stacked", CM_xmahal_zeuclid = "x_mahal_z_euclid")
+run_replication_cm_metrics <- function(cfg, r, seed) {
+  use_seed(seed)
+  t0 <- proc.time()[["elapsed"]]
+  smp <- simulate_sample(cfg)
+  m <- t(sapply(CM_METRICS, function(mt) est_cm(smp$W, smp$T, smp$Y, cfg$A, metric = mt)$m))
+  colnames(m) <- paste0("t", seq_len(cfg$A))
+  list(sim = cfg$name, rep = r, m = m,
+       diag = data.frame(sim = cfg$name, rep = r, seconds = proc.time()[["elapsed"]] - t0))
+}
+
+## Stage 4: estimates plus variance estimates for every estimator and pair.
+run_replication_stage4 <- function(cfg, r, seed) {
+  use_seed(seed)
+  t0 <- proc.time()[["elapsed"]]
+  smp <- simulate_sample(cfg)
+  A <- cfg$A; W <- smp$W; T <- smp$T; Y <- smp$Y
+  fits <- list(
+    CM = est_cm(W, T, Y, A, details = TRUE),
+    GPS = est_gps(fit_mlogit(gps_design(W, "main"), T, A)$fitted, T, Y, A, details = TRUE),
+    GPS_cs = est_gps(fit_mlogit(gps_design(W, "cs"), T, A)$fitted, T, Y, A, details = TRUE),
+    GPS_true = est_gps(smp$P_true, T, Y, A, details = TRUE))
+  m <- rbind(DIF = est_dif(Y, T, A), t(sapply(fits, `[[`, "m")))[ESTIMATORS, ]
+  colnames(m) <- paste0("t", seq_len(A))
+  v <- rbind(cbind(estimator = "DIF", pair_variances_dif(Y, T, A)),
+             do.call(rbind, lapply(names(fits), function(e) {
+               pv <- pair_variances_matching(fits[[e]], T, A)
+               cbind(estimator = e, pv, var_full = pv$var_noise + pv$var_sate) })))
+  sate <- pairs_from_m(colMeans(smp$mu)); names(sate)[3] <- "sate"
+  list(sim = cfg$name, rep = r, m = m, var = v, sate = sate,
+       diag = data.frame(sim = cfg$name, rep = r, seconds = proc.time()[["elapsed"]] - t0))
+}
+
+## Reads extra-run replications: estimates (long) and, if present, variances.
+collect_extra <- function(outdir) {
+  files <- sort(list.files(outdir, pattern = "^rep_\\d+\\.rds$", full.names = TRUE))
+  res <- lapply(files, readRDS)
+  est <- do.call(rbind, lapply(res, function(x) do.call(rbind, lapply(rownames(x$m), function(e)
+    cbind(sim = x$sim, rep = x$rep, estimator = e, pairs_from_m(x$m[e, ]))))))
+  out <- list(estimates = est, diag = do.call(rbind, lapply(res, `[[`, "diag")))
+  if (!is.null(res[[1]]$var)) {
+    out$var <- do.call(rbind, lapply(res, function(x) cbind(sim = x$sim, rep = x$rep, x$var)))
+    out$sate <- do.call(rbind, lapply(res, function(x) cbind(sim = x$sim, rep = x$rep, x$sate)))
+  }
+  out
 }

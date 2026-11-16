@@ -13,7 +13,7 @@ performance <- function(est, truth, truth_col = "tau_super") {
                mse = mean(g$err^2), sd = sd(g$est),
                mcse_bias = sd(g$est) / sqrt(R), mcse_mse = sd(g$err^2) / sqrt(R))
   }))
-  out$estimator <- factor(out$estimator, levels = ESTIMATORS)
+  out$estimator <- factor(out$estimator, levels = c(ESTIMATORS, setdiff(unique(out$estimator), ESTIMATORS)))
   out <- out[order(out$estimator, out$t, out$tprime), ]
   out$estimator <- as.character(out$estimator)
   rownames(out) <- NULL
