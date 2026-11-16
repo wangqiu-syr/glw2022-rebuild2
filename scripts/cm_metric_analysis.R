@@ -20,6 +20,8 @@ for (s in names(SIMS)) {
   a <- merge(ex$estimates[ex$estimates$estimator == "CM", ], st3[st3$estimator == "CM", ],
              by = c("rep", "t", "tprime"))
   check[s] <- max(abs(a$est.x - a$est.y))
+  zz <- gzfile(file.path(out, sprintf("estimates_%s.csv.gz", s)), "w")
+  write.csv(ex$estimates, zz, row.names = FALSE); close(zz)
   tr <- read.csv(sprintf("results/truth/%s_truth.csv", s))
   perf[[s]] <- rbind(performance(ex$estimates, tr, "tau_super"),
                      performance(ex$estimates, tr, "tau_mix"))
@@ -77,5 +79,5 @@ L <- c("# CM distance-metric sensitivity (D9)", "",
                            `S2 slope paper~ours` = f4(summ$sim2_slope_paper_on_ours),
                            `S2 mean MSE` = f4(summ$sim2_mean_mse), `S2 mean abs bias vs tau_mix` = f4(summ$sim2_mean_absbias_vs_mix),
                            check.names = FALSE)), "",
-       "Per-pair values: `performance_sim1.csv`, `performance_sim2.csv`. Figure: `figures/cm_metric_sensitivity_sim2.png`.")
+       "Per-replication estimates: `estimates_sim1.csv.gz`, `estimates_sim2.csv.gz`. Per-pair values: `performance_sim1.csv`, `performance_sim2.csv`. Figure: `figures/cm_metric_sensitivity_sim2.png`.")
 writeLines(L, file.path(out, "report.md")); cat(L, sep = "\n")

@@ -11,4 +11,4 @@ Bias against tau_super; paper's Sim 2 signs multiplied by -1 (D5). Paper CM: Sim
 | stacked: Mahalanobis(X, Z) | 0.1787 | 0.0742 | 0.3675 | 0.3037 | 0.7573 | 0.3272 | 0.2897 | 0.2702 |
 | Mahalanobis(X) + Euclidean(Z) | 0.1460 | -0.1400 | 0.3384 | 0.2657 | 0.7041 | 0.3542 | 0.2919 | 0.2358 |
 
-Per-pair values: `performance_sim1.csv`, `performance_sim2.csv`. Figure: `figures/cm_metric_sensitivity_sim2.png`.
+Per-replication estimates: `estimates_sim1.csv.gz`, `estimates_sim2.csv.gz`. Per-pair values: `performance_sim1.csv`, `performance_sim2.csv`. Figure: `figures/cm_metric_sensitivity_sim2.png`.
