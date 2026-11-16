@@ -479,3 +479,83 @@ The matching step is identical to the primary `GPS` (D13). Pilot note: the
 correctly specified model gives some fitted probabilities as small as 1e-28 in
 Sim 2 (separation in the $Z_2^2$ tail). These are valid matching scores and are
 used as they are.
+
+---
+
+# Stage 4: intervals and coverage
+
+## D26. Interval method — impact H for coverage
+
+**Issue.** Tables 1 and 3 report coverage for CM and GPS but never say how the
+intervals were built. The only hint is in Section 6 (Table 5): intervals are
+"estimate ± 1.96 × sd", with sd "the sample standard deviation".
+
+**Options.**
+(a) A normal-approximation interval with an analytic variance derived from the
+estimator's own form (below).
+(b) A nonparametric bootstrap, resampling units within each treatment group and
+recomputing everything, including the Mahalanobis covariances and the logit fit.
+(c) Section 6's recipe, read as ± 1.96 × the SD of the unit-level imputed effects.
+(d) "Oracle" intervals, ± 1.96 × the Monte Carlo SD of the estimates across replications.
+
+**Choice.** (a) is the method. (d) is reported only as a diagnostic, because it
+uses the true sampling SD, which an analyst never has; it shows how much of any
+under-coverage is due to bias alone. For DIF the interval is
+$\bar Y_t - \bar Y_{t'} \pm 1.96\,(s_t^2/n_t + s_{t'}^2/n_{t'})^{1/2}$.
+
+**Reason.**
+* (a) follows directly from the estimator, is cheap, and accounts for both
+  sources of sampling variation under the fixed-group-size design (D3).
+* (b) would cost B × about 1 s per Sim 2 replication: roughly 1.5–3 h of compute
+  on 4 cores for B = 100–200, more than the time limit allows. It is also on weak
+  footing for nearest-neighbour matching: a bootstrap sample contains copies of
+  the same unit, and those copies become exact matches for each other, which the
+  original sample never has.
+* (c) gives a prediction interval for a single unit's effect, not a confidence
+  interval for the average. It would be many times too wide (coverage ≈ 100%),
+  which does not fit the paper's CM coverage of 92% for some pairs.
+
+**Derivation of (a).** Every estimator here is linear in the observed outcomes:
+$\hat\tau(t,t') = n^{-1}\{\sum_{j\in G_t} w_j Y_j - \sum_{j\in G_{t'}} w_j Y_j\}$, where
+$w_j$ is the number of units, $j$ itself included, whose imputed $Y(t)$ is $Y_j$
+(fractional under ties). Let $V$ be what the estimator matches on: all covariates
+for CM, the scalar score for GPS. Write $Y_j = m_{T_j}(V_j) + e_j$ with
+$m_t(v) = E[Y \mid V = v, T = t]$. Then
+
+$$\hat\tau - \tau = \underbrace{\Big[\tfrac1n\textstyle\sum_i \tau(V_i) - \tau\Big]}_{\text{units drawn}}
++ \underbrace{B_n}_{\text{matching bias}} + \underbrace{\tfrac1n\textstyle\sum_j c_j e_j}_{\text{outcome noise}},$$
+
+with $c_j = \pm w_j$ and $\tau(V_i)$ the effect at unit $i$'s matching variables.
+Given the covariates, the noise term has variance
+$\frac{1}{n^2}\sum_j w_j^2\sigma^2(V_j)$. Under D3 the units are independent with
+fixed group sizes, so the first term has variance
+$\frac{1}{n^2}\sum_s n_s \mathrm{Var}\{\tau(V)\mid T=s\}$. The estimates are:
+* $\hat\sigma^2_j = (Y_j - Y_l)^2/2$, where $l$ is $j$'s nearest other unit in the
+  same group, measured in the estimator's own metric (ties averaged).
+* $\widehat{\mathrm{Var}}\{\tau(V)\mid T=s\}$ is the within-group sample variance of
+  the unit-level imputed effects $\hat Y_i(t) - \hat Y_i(t')$, minus their average
+  noise variance $\sum_j a_{ij}^2\hat\sigma^2_j$ (both levels), floored at 0.
+
+The interval for the population effect uses
+$\hat V = \hat V_{noise} + \hat V_{units}$. The interval for the sample-average
+effect $n^{-1}\sum_i\{\mu_t(W_i)-\mu_{t'}(W_i)\}$ uses $\hat V_{noise}$ only.
+
+**Limitations, stated in advance.**
+1. The matching bias $B_n$ is not in the interval, by design. The interval
+   describes the estimator's sampling variability, so bias lowers coverage. The
+   oracle diagnostic (d) separates the two effects.
+2. Uncertainty from estimating the propensity score is ignored.
+3. For GPS, the noise term and the units term can be slightly correlated, because
+   $Y(t)$ and $Y(t')$ are matched on different scores. This is ignored.
+
+**Checks.** The variance pieces reproduce a hand-worked 6-unit example, and in a
+randomised setting with a heterogeneous effect the estimated variance falls
+within 0.7–1.45 of the Monte Carlo variance for both CM and GPS
+(`tests/testthat/test-variance.R`).
+
+**What is reported.** Coverage of the nominal 95% interval against
+$\tau_{super}$ (the paper's truth, used for the comparison), against $\tau_{mix}$,
+and against the sample-average effect (conditional interval); oracle coverage;
+and the SE calibration ratio, mean estimated SE / Monte Carlo SD. With 500
+replications, the Monte Carlo SE of a coverage near 95% is about 1 percentage
+point.
