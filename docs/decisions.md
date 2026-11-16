@@ -36,6 +36,10 @@ Summary:
 | D19 | Extra measures not in the paper | Signed bias and MSE for Sim 1; empirical SD; MC SEs | — |
 | D20 | Residual mismatch in the DIF column | Unresolved; flagged | — |
 | D21 | Sim 1 outcomes not centred (Sim 2 are) | Taken literally | L |
+| D22 | Fitting the multinomial logit (Stage 2) | Hand-written Newton–Raphson, checked against `glm` and `nnet::multinom` | L |
+| D23 | Order and method of random draws (Stage 2) | X via Cholesky factor; T by inverse CDF; batches of 1000 | L |
+| D24 | Tie tolerance in matching (Stage 2) | Relative 1e-10 | L |
+| D25 | Sensitivity GPS models (agreed at Stage 1 review) | GPS_cs (correctly specified logit) and GPS_true (true scores) | — |
 
 ---
 
@@ -400,3 +404,63 @@ them.
 
 **Reason.** Adding a constant $c_t$ to $Y(t)$ shifts $\hat\tau$ and $\tau$ by the
 same amount for all three estimators, so bias, MSE and coverage are unaffected.
+
+---
+
+# Stage 2 implementation choices
+
+## D22. Fitting the multinomial logit — impact L
+
+**Choice.** A hand-written Newton–Raphson (`R/mlogit.R`). Baseline category 1,
+an intercept, and covariates standardised internally (fitted probabilities do
+not change). Each step is halved if it would lower the log-likelihood. The fit
+counts as converged when the largest Newton step is below 1e-8 on the
+standardised scale, with at most 100 iterations. Convergence and iteration
+counts are stored for every replication.
+
+**Reason.** It is fully transparent and exact. `nnet::multinom` fits by BFGS
+with a loose default tolerance. Tests show the fit equals `glm(binomial)` with
+two classes, matches `nnet::multinom` with a tight tolerance on Sim 2-type data
+(fitted probabilities within 1e-4, log-likelihood at least as high), satisfies
+the score equations to 1e-6, and recovers known coefficients. Pilot: every fit
+converged in 5–9 iterations.
+
+## D23. Random draws — impact L
+
+**Choice.** $X = U R$ with $U$ an $N\times 4$ matrix of standard normals and $R$
+the upper Cholesky factor of $\Sigma_X$, rather than `MASS::mvrnorm`, whose
+eigendecomposition can differ across LAPACK builds. Then
+$Z_1$ = `runif(N, -3, 3)`, $Z_2$ = `rchisq(N, 1)`, $Z_3$ = `rbinom(N, 1, .5)`.
+$T$ comes from one uniform per candidate, by inverse CDF:
+$T = \min\{t : u \le \sum_{s\le t} p_s\}$. Candidates are drawn in batches of
+1000 with order (X, Z₁, Z₂, Z₃, u) within a batch. After the groups are filled,
+$\varepsilon$ is drawn for the kept units, sorted by treatment and then by order
+of drawing. The batch size is part of the random-number protocol (`R/config.R`).
+
+**Note.** Pilot replications 1–20 use the same streams as replications 1–20 of
+the full run, so they reproduce exactly.
+
+## D24. Tie tolerance — impact L
+
+**Choice.** A donor counts as tied with the nearest one if its distance is
+within $10^{-10}\max(d_{min}, 1)$ of the minimum, and tied donors' outcomes are
+averaged (D10).
+
+**Reason.** Floating-point rounding can separate distances that are
+mathematically equal; the hand-made test case has exact ties of that kind. With
+continuous covariates, genuinely different distances this close do not occur in
+practice. A unit's distance to itself is exactly 0, because distances are built
+from coordinate differences.
+
+## D25. Sensitivity variants of GPS matching (agreed at the Stage-1 review)
+
+**Choice.** Every replication also computes
+* `GPS_cs`: the multinomial logit with main effects plus
+  $x_1^2,\dots,x_4^2, z_1^2, z_2^2$. This nests every true $\eta_t$, since each
+  equation has its own coefficients. $z_3^2 = z_3$ is omitted as collinear.
+* `GPS_true`: matching on the true $p_t(W)$.
+
+The matching step is identical to the primary `GPS` (D13). Pilot note: the
+correctly specified model gives some fitted probabilities as small as 1e-28 in
+Sim 2 (separation in the $Z_2^2$ tail). These are valid matching scores and are
+used as they are.

@@ -80,7 +80,9 @@ The paper's denominator, $1+\sum_{t=1}^{A}\exp\{\eta_t\}$, does not sum to one
 | 8 | $0.1(x_1^2 + x_2^2 + x_3^2 + x_4^2 + z_1^2 + z_2^2 + z_3^2)$ |
 | 9 | $0.1(x_1 + x_2 + x_3 + x_4 + z_1 + z_2 + z_3)$ |
 
-($z_3^2 = z_3$ because $Z_3$ is binary.) Under 2.1, the marginal treatment shares
+($z_3^2 = z_3$ because $Z_3$ is binary, so $\eta_6 \equiv \eta_7$. Treatments 6 and 7
+therefore have identical propensity functions and identical covariate
+distributions given $T$. They differ only in their outcome models.) Under 2.1, the marginal treatment shares
 $\pi_t = E[p_t(W)]$ (computed by Monte Carlo integration, `results/stage1/`) are:
 Sim 1: 0.183 / 0.255 / 0.252 / 0.310; Sim 2: 0.060 / 0.082 / 0.081 / 0.097 /
 0.129 / 0.148 / 0.148 / 0.186 / 0.068. The $z_2^2$ terms in $\eta_6,\eta_7,\eta_8$
@@ -179,6 +181,10 @@ averaged over all $n$ units, including those in neither group $t$ nor group $t'$
 
 No trimming is applied (**D14**).
 
+Sensitivity variants (**D25**), computed in every replication with the same
+matching step: **GPS_cs** uses a correctly specified multinomial logit (main
+effects plus $x_1^2..x_4^2, z_1^2, z_2^2$), and **GPS_true** uses the true $p_t(W)$.
+
 ### 3.4 Not part of the reproduction
 
 The covariate-balance algorithms (Steps 1–3 on pp. 971 and 973) are not used in
@@ -252,10 +258,12 @@ the paper.
   $r$ times to a fixed master seed. Replication $r$ is therefore reproducible
   without running the others. Each replication's estimates are saved to disk as
   soon as it finishes, so a run can resume.
-* Software: R 4.3.3 (Ubuntu 24.04 archive). Packages: MASS 7.3-60.0.1
-  (`mvrnorm`), nnet 7.3-19 (candidate for multinomial-logit fitting; Stage 2),
-  testthat 3.2.1, ggplot2 3.4.4, data.table 1.14.10. No package implementing a
-  matching estimator is used.
+* Software: R 4.3.3 (Ubuntu 24.04 archive). The code in `R/` uses base R only
+  (including `parallel`). The multinomial logit is a hand-written Newton–Raphson
+  (**D22**). Packages: testthat 3.2.1 (tests); nnet 7.3-19 (only as a reference
+  in one test of the logit fit); MASS 7.3-60.0.1 (only in the Stage-1 diagnostic
+  scripts); ggplot2 3.4.4 (figures, Stage 3). No package implementing a matching
+  estimator is used.
 
 ---
 
