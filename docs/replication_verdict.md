@@ -14,6 +14,8 @@ pattern in its tables is reversed: which matching estimator is less biased. Two
 columns of its Table 3 appear to contain reporting errors: the DIF "MSE" and the
 sign of the biases.
 
+![This rebuild vs. the paper at a glance](../figures/summary_vs_paper.png)
+
 | # | Claim or reported result | Paper | This rebuild | Verdict |
 |---|---|---|---|---|
 | 1 | "Both the covariate matching method and the generalized propensity score matching method significantly reduce bias" (Sim 1, p. 974) | mean \|bias\| DIF 0.44, CM 0.14, GPS 0.29; DIF worse than CM in 5/6 pairs, than GPS in 4/6 | DIF 0.58, CM 0.17, GPS 0.04; 6/6 and 6/6 | **Reproduced** |
@@ -43,6 +45,13 @@ $\hat m_t - \hat m_{t'}$, so each bias column must decompose as $h_t - h_{t'}$.
 All three of the paper's bias columns do, to rounding (max residual 7e-5). This
 confirms the transcription and that the paper's estimators average imputed
 outcomes over all units.
+
+**Where the differences sit.** Every pairwise bias is $h_t - h_{t'}$, so the 36
+biases of each estimator reduce to nine per-treatment components. In Simulation 2
+the DIF gaps are concentrated in combinations 3, 4 and 7, and the CM gaps in 8
+and 9. The paper's GPS components are larger than ours for most combinations.
+
+![Simulation 2 bias by treatment combination](../figures/sim2_bias_by_treatment_vs_paper.png)
 
 **Which estimator is less biased (#7).** The paper's GPS bias is about 2.3× ours
 (correlation 0.83). Its CM bias is about a third of ours (correlation 0.73). The
@@ -100,4 +109,5 @@ Rscript scripts/run_extra.R cm_metrics sim1,sim2 1 500 results/runs_cm_metrics 4
 Rscript scripts/cm_metric_analysis.R
 Rscript scripts/run_extra.R stage4 sim1,sim2 1 500 results/runs_stage4 4
 Rscript scripts/stage4_analysis.R
+Rscript scripts/comparison_figures.R
 ```
