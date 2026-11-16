@@ -120,6 +120,8 @@ largest Monte Carlo SE of a bias is 0.06.
 | GPS, correctly specified logit | 0.04 | 0.71 | 0.10 | 0.84 |
 | GPS, true scores | 0.11 | 1.58 | 0.18 | 1.66 |
 
+![This rebuild vs. the paper at a glance](figures/summary_vs_paper.png)
+
 Coverage of 95% intervals, mean [min, max] over pairs:
 
 | | Sim 1 ours | Sim 1 paper | Sim 2 ours | Sim 2 paper | estimated SE / true SD |
@@ -135,8 +137,32 @@ Coverage of 95% intervals, mean [min, max] over pairs:
 - CM under-covers in Simulation 2 where it is biased (per-pair coverage
   correlates −0.92 with |bias|/SD).
 
-Figures: [`figures/`](figures). Reports: [`results/stage3_report.md`](results/stage3_report.md)
-(bias, MSE), [`results/stage4_report.md`](results/stage4_report.md) (coverage),
+Simulation 2, bias of each of the 36 pairwise effects (the paper's Fig. 1 shows
+its own values in the same order):
+
+![Simulation 2 bias by pair, this rebuild vs. the paper](figures/sim2_bias_vs_paper.png)
+
+Coverage by pair:
+
+![Coverage of 95% intervals, this rebuild vs. the paper](figures/coverage_vs_paper.png)
+
+All comparison figures, in [`figures/`](figures):
+
+| Figure | Shows |
+|---|---|
+| [`summary_vs_paper.png`](figures/summary_vs_paper.png) | mean \|bias\|, MSE and coverage for DIF, CM and GPS, this rebuild vs. the paper, both simulations |
+| [`sim1_absbias_vs_paper.png`](figures/sim1_absbias_vs_paper.png) | Simulation 1: \|bias\| for each of the 6 pairs, against Table 1 |
+| [`sim2_bias_vs_paper.png`](figures/sim2_bias_vs_paper.png) | Simulation 2: signed bias for each of the 36 pairs, against Table 3 |
+| [`sim2_mse_vs_paper.png`](figures/sim2_mse_vs_paper.png) | Simulation 2: MSE for each pair (log scale), including the within-group variance sum that the paper's DIF "MSE" tracks |
+| [`bias_scatter_vs_paper.png`](figures/bias_scatter_vs_paper.png) | bias, this rebuild against the paper, one point per pair |
+| [`sim2_bias_by_treatment_vs_paper.png`](figures/sim2_bias_by_treatment_vs_paper.png) | Simulation 2: the 36 biases reduced to nine per-treatment components, showing which treatments drive the differences |
+| [`estimator_overview.png`](figures/estimator_overview.png) | all five estimators, including the GPS sensitivity variants |
+| [`cm_metric_sensitivity_sim2.png`](figures/cm_metric_sensitivity_sim2.png) | CM bias under three distance metrics, against the paper |
+| [`coverage_vs_paper.png`](figures/coverage_vs_paper.png) | coverage of 95% intervals by pair, against Tables 1 and 3 |
+| [`se_calibration.png`](figures/se_calibration.png) | estimated SE / true sampling SD, by estimator |
+
+Reports: [`results/stage3_report.md`](results/stage3_report.md) (bias, MSE),
+[`results/stage4_report.md`](results/stage4_report.md) (coverage),
 [`results/cm_metric_sensitivity/report.md`](results/cm_metric_sensitivity/report.md).
 
 ## Reproduce
@@ -155,6 +181,7 @@ Rscript scripts/run_extra.R cm_metrics sim1,sim2 1 500 results/runs_cm_metrics 4
 Rscript scripts/cm_metric_analysis.R                                # CM metric sensitivity
 Rscript scripts/run_extra.R stage4 sim1,sim2 1 500 results/runs_stage4 4
 Rscript scripts/stage4_analysis.R                                   # coverage
+Rscript scripts/comparison_figures.R                                # summary figures (from tracked tables only)
 ```
 
 The last argument is the number of cores. Each replication runs on its own
