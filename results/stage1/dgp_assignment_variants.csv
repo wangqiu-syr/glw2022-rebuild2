@@ -1,0 +1,7 @@
+"sim","variant","compare","rmsd","cor"
+"sim1","softmax","abs bias vs Table 1",0.308625942835578,0.616828782876269
+"sim1","left_to_1","abs bias vs Table 1",0.36028566593596,0.720071844283871
+"sim1","left_to_A","abs bias vs Table 1",0.594031381194839,-0.214710272213455
+"sim2","softmax","-bias vs Table 3 signed bias",0.402683115142864,0.955973709465469
+"sim2","left_to_1","-bias vs Table 3 signed bias",0.415555852814908,0.954044608530805
+"sim2","left_to_A","-bias vs Table 3 signed bias",0.792483428075191,0.796074118422169
