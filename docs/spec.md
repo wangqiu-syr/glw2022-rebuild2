@@ -308,5 +308,5 @@ column is about 0.02–0.06. Summary (details in `results/stage1/` and **D1–D5
 | Sim 2, sign of bias | Correlation with the paper is −0.956 as defined, +0.956 with the sign flipped (**D5**) |
 | Normalisation variants (Sim 2 RMS) | softmax 0.403; leftover mass to $t=1$: 0.416; to $t=A$: 0.792 |
 | Paper's CM bias pattern (Sim 2) | Correlation 0.82 (30/36 signs agree) with the sign-aligned $\tau_{mix}-\tau_{super}$, against 0.44 with the population DIF bias. This supports design 2.4 together with truth $\tau_{super}$ (**D3**, **D4**) |
-| Paper's DIF "MSE" (Sim 2) | 49–335, about 0.81–1.00 × $\{\mathrm{Var}(Y\mid T=t)+\mathrm{Var}(Y\mid T=t')\}$; not an MSE of a difference in means (**D15**) |
+| Paper's DIF "MSE" (Sim 2) | 49–335, about 0.81–1.00 × $\{\mathrm{Var}(Y\mid T=t)+\mathrm{Var}(Y\mid T=t')\}$; closer to these variances than to an MSE of a difference in means (**D15**) |
 | Remaining DIF mismatch | Sim 1: pairs involving $t=3$ (population $h_3$ ≈ 0.70 away from the paper's); Sim 2: $t=4$ and $t=7$ (≈ 0.4–0.6). Not explained by any variant tried; flagged in **D20** |

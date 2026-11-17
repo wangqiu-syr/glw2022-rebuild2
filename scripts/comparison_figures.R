@@ -55,7 +55,7 @@ gA <- ggplot(d, aes(value, estimator)) +
   labs(x = NULL, y = NULL, title = "This rebuild vs. the paper at a glance",
        subtitle = "Each row: one estimator; the grey bar joins this rebuild's value to the paper's. Dashed line: nominal 95%.",
        caption = paste("Bias against the population effect, 500 replications per simulation. The paper reports no MSE for Simulation 1",
-                       "(only this rebuild is shown) and no coverage for DIF.\nDIF's MSE is omitted: the paper's DIF 'MSE' is not an MSE (decisions D15)."))
+                       "(only this rebuild is shown) and no coverage for DIF.\nDIF's MSE is omitted: the paper's DIF 'MSE' appears to be a different quantity (decisions D15)."))
 ggsave("figures/summary_vs_paper.png", gA, width = 10, height = 5.2, dpi = 200, bg = SURF)
 
 ## ---- Figure B: Sim 2 bias by treatment (additive components)

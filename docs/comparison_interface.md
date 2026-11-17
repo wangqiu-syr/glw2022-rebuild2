@@ -105,7 +105,7 @@ The reasons are in [`decisions.md`](decisions.md).
 | D12 | propensity model | main-effects multinomial logit, refitted in each replication |
 | D13 | GPS score | scalar $\hat p_t$ for target level $t$ |
 | D14 | trimming | none |
-| D15 | MSE | standard; the paper's DIF "MSE" flagged as not an MSE |
+| D15 | MSE | standard; the paper's DIF "MSE" flagged as a different quantity |
 | D17 | replications, random numbers | 500; one stream per replication |
 | D21 | Sim 1 outcomes uncentred | as written |
 | D22 | logit fitting | Newton–Raphson, converged in every replication |

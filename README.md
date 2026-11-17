@@ -22,9 +22,10 @@ simulation studies.
   a misspecified propensity model. A correctly specified model does not improve
   it, and the true propensity scores make it worse. The reason is the
   equal-group-size design: the population score does not balance the sample.
-- **Reporting issues.** The DIF "MSE" column of Table 3 (49–335) is not an MSE.
-  It tracks the sum of the two within-group outcome variances. The printed bias
-  signs are reversed relative to the paper's own definition.
+- **Two reporting questions.** The DIF "MSE" column of Table 3 (49–335) is close
+  to the sum of the two within-group outcome variances, rather than to an MSE of
+  a difference in means. The printed bias signs appear reversed relative to the
+  paper's own definition.
 
 The full verdict, claim by claim, is in
 [`docs/replication_verdict.md`](docs/replication_verdict.md).
@@ -114,7 +115,7 @@ largest Monte Carlo SE of a bias is 0.06.
 
 | | Sim 1 \|bias\| ours / paper | Sim 1 MSE ours | Sim 2 \|bias\| ours / paper | Sim 2 MSE ours / paper |
 |---|---|---|---|---|
-| DIF | 0.58 / 0.44 | 1.78 | 0.96 / 1.08 | 2.30 / 182.9 (not an MSE) |
+| DIF | 0.58 / 0.44 | 1.78 | 0.96 / 1.08 | 2.30 / 182.9 (a different quantity; D15) |
 | CM | 0.17 / 0.14 | 0.36 | 0.30 / 0.14 | 0.29 / 0.37 |
 | GPS | 0.04 / 0.29 | 0.66 | 0.11 / 0.31 | 0.61 / 1.92 |
 | GPS, correctly specified logit | 0.04 | 0.71 | 0.10 | 0.84 |
@@ -235,7 +236,8 @@ findings do not hold:
 - the paper's explanation of GPS's lower efficiency, since correcting the
   propensity model does not help.
 
-The DIF MSE column and the bias signs of Table 3 appear to be reporting errors.
+The DIF MSE column and the bias signs of Table 3 appear to follow different
+conventions from the paper's own definitions.
 An open implementation, with every interpretive choice recorded, is now
 available as a basis for applying and extending the methods.
 
@@ -263,9 +265,10 @@ the logit fit, and for figures (testthat, nnet, MASS, ggplot2).
 The work was done in one Claude Code session whose GitHub access covered only
 this repository, plus read access to sr08-replication once it was offered.
 Every interpretive choice is recorded, with its reason, in
-[`docs/decisions.md`](docs/decisions.md). Version 1.0.0 (tag `v1.0.0`) is the
-frozen state, and any later comparison with other rebuilds is made against that
-tag.
+[`docs/decisions.md`](docs/decisions.md). Version 1.0.0 is the state at the end of
+stage 4 (commit `7b25857`). Later commits add figures, this note and a summary
+file, and change no results. A release tag, `v1.0.0`, is to mark that state when
+the repository is published, and comparisons with other rebuilds use it.
 
 ## AI assistance
 
