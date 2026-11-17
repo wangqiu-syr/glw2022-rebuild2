@@ -182,6 +182,7 @@ Rscript scripts/cm_metric_analysis.R                                # CM metric 
 Rscript scripts/run_extra.R stage4 sim1,sim2 1 500 results/runs_stage4 4
 Rscript scripts/stage4_analysis.R                                   # coverage
 Rscript scripts/comparison_figures.R                                # summary figures (from tracked tables only)
+Rscript scripts/export_summary_long.R                               # tidy summary for comparisons (from tracked tables only)
 ```
 
 The last argument is the number of cores. Each replication runs on its own
@@ -199,11 +200,11 @@ and `scripts/stage1_*.R`.
 | `R/` | the rebuild: DGP and group-filling sampler (`dgp.R`), multinomial logit by Newton–Raphson (`mlogit.R`), DIF, CM and GPS (`estimators.R`), variance estimators (`variance.R`), true effects (`truth.R`), random streams and resumable runner (`rng.R`, `run.R`), performance measures (`performance.R`) |
 | `tests/testthat/` | 111 tests, including hand-worked matching and variance examples |
 | `scripts/` | drivers for the tests, truths, runs, analyses and Stage-1 checks |
-| `docs/` | `replication_verdict.md` (verdict), `spec.md` (specification), `decisions.md` (every interpretive choice) |
+| `docs/` | `replication_verdict.md` (verdict), `spec.md` (specification), `decisions.md` (every interpretive choice), `comparison_interface.md` (definitions and file map for comparisons with other implementations) |
 | `data/paper/` | the paper's Tables 1 and 3 as CSV |
 | `results/sim1/`, `results/sim2/` | per-replication estimates, intervals (`.csv.gz`), performance against two truths, coverage, comparison with the paper |
 | `results/truth/`, `results/stage1/`, `results/pilot/`, `results/cm_metric_sensitivity/` | population truths, Stage-1 evidence, pilot, CM metric sensitivity |
-| `results/*.md`, `results/*.csv` | Stage 3 and Stage 4 reports, summary tables |
+| `results/*.md`, `results/*.csv` | Stage 3 and Stage 4 reports, summary tables; `rebuild2_summary_long.csv` (all measures in one tidy table, see `docs/comparison_interface.md`) |
 | `figures/` | comparisons with the paper's tables, coverage, SE calibration |
 
 The work was done in four reviewed stages: specification, code and tests,
