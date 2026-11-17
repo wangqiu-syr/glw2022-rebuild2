@@ -107,7 +107,7 @@ choices:
 - $Y(1)$ in Simulation 2 lacks an error term, and Table 2's numbering repeats a
   label (D6, D7).
 
-Sensitivity runs: GPS with a correctly specified logit and with the true
+Sensitivity runs: GPS with a correctly specified logit and with the population
 propensity scores, and CM under two other distance metrics.
 
 ## Results
@@ -136,8 +136,8 @@ Coverage of 95% intervals, mean [min, max] over pairs:
 | DIF | 86.9 | – | 79.8 | – | 0.98, 1.01 |
 
 - GPS over-covers because an SE that ignores propensity-score estimation is too
-  large: with estimated scores the estimator varies much less than with the true
-  ones.
+  large: with estimated scores the estimator varies much less than with the
+  population scores.
 - CM under-covers in Simulation 2 where it is biased (per-pair coverage
   correlates −0.92 with |bias|/SD).
 
@@ -273,10 +273,10 @@ the logit fit, and for figures (testthat, nnet, MASS, ggplot2).
 The work was done in one Claude Code session whose GitHub access covered only
 this repository, plus read access to sr08-replication once it was offered.
 Every interpretive choice is recorded, with its reason, in
-[`docs/decisions.md`](docs/decisions.md). Version 1.0.0 is the state at the end of
-stage 4 (commit `7b25857`). Later commits add figures, this note and a summary
-file, and change no results. A release tag, `v1.0.0`, is to mark that state when
-the repository is published, and comparisons with other rebuilds use it.
+[`docs/decisions.md`](docs/decisions.md). The results are those at the end of
+stage 4 (commit `7b25857`). Later commits add figures, documentation (including
+this note) and a summary file, and change no results. The release tag `v1.0.0`
+marks the published state, which includes them.
 
 ## AI assistance
 
