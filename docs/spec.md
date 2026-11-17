@@ -234,7 +234,7 @@ pair $(t,t')$, over $R$ replications with estimates $\hat\tau_r$:
 | MSE | $R^{-1}\sum_r(\hat\tau_r - \tau)^2$ (**D15**) | Table 3 |
 | Empirical SD | $\{(R-1)^{-1}\sum_r(\hat\tau_r - \bar{\hat\tau})^2\}^{1/2}$ | no (added) |
 | Monte Carlo SEs | of bias ($\mathrm{SD}/\sqrt R$) and of MSE | no (added) |
-| Coverage | share of replications whose 95% interval contains $\tau$; interval method to be chosen in Stage 4 (**D16**) | Tables 1 and 3, CM and GPS only, whole percent |
+| Coverage | share of replications whose 95% interval contains $\tau$; interval method: analytic variance with normal intervals (**D26**) | Tables 1 and 3, CM and GPS only, whole percent |
 
 What the paper reports:
 
