@@ -135,9 +135,11 @@ Coverage of 95% intervals, mean [min, max] over pairs:
 | GPS, population scores | 94.4 | – | 94.2 | – | 0.98, 1.00 |
 | DIF | 86.9 | – | 79.8 | – | 0.98, 1.01 |
 
-- GPS over-covers because an SE that ignores propensity-score estimation is too
-  large: with estimated scores the estimator varies much less than with the
-  population scores.
+- GPS covers almost 100% of the time because its intervals are too wide. Its
+  standard error is calculated as if the propensity scores were known, and it
+  is right when matching on the known population scores. Matching on estimated
+  scores varies less (SD 0.76–0.79, against 1.23–1.25 with the population
+  scores), so the standard error is about 1.5 times too large.
 - CM under-covers in Simulation 2 where it is biased (per-pair coverage
   correlates −0.92 with |bias|/SD).
 
@@ -159,7 +161,7 @@ All comparison figures, in [`figures/`](figures):
 | [`sim2_bias_vs_paper.png`](figures/sim2_bias_vs_paper.png) | Simulation 2: signed bias for each of the 36 pairs, against Table 3 |
 | [`sim2_mse_vs_paper.png`](figures/sim2_mse_vs_paper.png) | Simulation 2: MSE for each pair (log scale), including the within-group variance sum that the paper's DIF "MSE" tracks |
 | [`bias_scatter_vs_paper.png`](figures/bias_scatter_vs_paper.png) | bias, this rebuild against the paper, one point per pair |
-| [`sim2_bias_by_treatment_vs_paper.png`](figures/sim2_bias_by_treatment_vs_paper.png) | Simulation 2: the 36 biases reduced to nine per-treatment components, showing which treatments drive the differences |
+| [`sim2_bias_by_treatment_vs_paper.png`](figures/sim2_bias_by_treatment_vs_paper.png) | Simulation 2: each pair's bias split into one part per treatment (nine in all), showing which treatments drive the differences |
 | [`estimator_overview.png`](figures/estimator_overview.png) | all five estimators, including the GPS sensitivity variants |
 | [`cm_metric_sensitivity_sim2.png`](figures/cm_metric_sensitivity_sim2.png) | CM bias under three distance metrics, against the paper |
 | [`coverage_vs_paper.png`](figures/coverage_vs_paper.png) | coverage of 95% intervals by pair, against Tables 1 and 3 |
@@ -191,8 +193,8 @@ Rscript scripts/export_summary_long.R                               # tidy summa
 
 The last argument is the number of cores. Each replication draws its random
 numbers from its own separate, reproducible stream (R's L'Ecuyer-CMRG
-generator; L'Ecuyer, Simard, Chen & Kelton, 2002, *Operations Research* 50(6),
-1073–1075), so it gives the same result whether run alone or in a batch. Runs
+generator; L'Ecuyer et al., 2002), so it gives the same result whether run
+alone or in a batch. Runs
 save one file per replication and resume if interrupted. Those per-replication
 files (`results/runs*/`) are not tracked, but the combined estimates, intervals
 and performance tables that the reports are built from are. The 20-replication
@@ -222,11 +224,13 @@ bias and MSE, and intervals and coverage.
   within the sample.** The population score no longer balances the sample, so
   the score should be estimated from the sample itself. Here matching on the
   population scores was the worst GPS variant.
-- **Check transcribed tables against their structure.** Each pairwise bias is
-  the difference of two per-treatment quantities, $h_t - h_{t'}$, so each
-  estimator's 36 Simulation 2 biases are fixed by nine numbers, and its 6
-  Simulation 1 biases by four. All 126 transcribed bias values in Tables 1 and
-  3 fit this pattern to rounding, which confirms the transcription.
+- **Check transcribed tables against their structure.** Every estimate here is
+  the difference of two estimated means, one per treatment, so the bias for a
+  pair is the error in one treatment's mean minus the error in the other's.
+  Biases must therefore add up along a chain: bias(1,3) = bias(1,2) +
+  bias(2,3). The paper's 108 signed biases in Table 3 pass this check to
+  rounding, and Table 1's 18 absolute values pass it for one choice of signs,
+  so a mistyped value would have shown up.
 - **Tables should state their conventions.** One line in the table notes,
   giving the sign of the bias, what the MSE measures and the interval method,
   would have settled three of the paper's ambiguities.
@@ -283,6 +287,16 @@ marks the published state, which includes them.
 Code, documentation and analyses were developed with Claude (Anthropic) as a
 coding assistant, under the author's direction. The author designed the study,
 checked the results and is responsible for the content.
+
+## References
+
+- Guo, S., Liu, J., & Wang, Q. (2022). Effective learning during COVID-19:
+  Multilevel covariates matching and propensity score matching. *Annals of Data
+  Science, 9*(5), 967–982. https://doi.org/10.1007/s40745-022-00392-x
+- L'Ecuyer, P., Simard, R., Chen, E. J., & Kelton, W. D. (2002). An
+  object-oriented random-number package with many long streams and substreams.
+  *Operations Research, 50*(6), 1073–1075.
+  https://doi.org/10.1287/opre.50.6.1073.358
 
 ## How to cite
 
