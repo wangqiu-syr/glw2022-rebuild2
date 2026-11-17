@@ -1,6 +1,6 @@
 # Multilevel covariates matching and generalized propensity score matching: An R rebuild of Guo, Liu and Wang's (2022) simulations
 
-Qiu Wang, Syracuse University · v1.0 · November 2026
+Qiu Wang, Syracuse University · v1.0.0 · November 2026
 
 ## Key findings
 
@@ -279,7 +279,7 @@ checked the results and is responsible for the content.
 ## How to cite
 
 Wang, Q. (2026). *Multilevel covariates matching and generalized propensity score
-matching: An R rebuild of Guo, Liu and Wang's (2022) simulations* (Version 1.0)
+matching: An R rebuild of Guo, Liu and Wang's (2022) simulations* (Version 1.0.0)
 [Computer software]. GitHub. https://github.com/wangqiu-syr/glw2022-rebuild2
 
 Original article: Guo, S., Liu, J., & Wang, Q. (2022). Effective learning during
