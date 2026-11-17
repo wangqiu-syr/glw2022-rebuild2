@@ -5,6 +5,16 @@ version: 1.0.0
 date-released: 2026-11-17
 doi: 10.5281/zenodo.24301219
 license: MIT
+keywords:
+  - causal inference
+  - propensity score
+  - generalized propensity score
+  - covariate matching
+  - matching
+  - multilevel treatments
+  - replication
+  - simulation
+  - R
 repository-code: "https://github.com/wangqiu-syr/glw2022-rebuild2"
 authors:
   - family-names: Wang
