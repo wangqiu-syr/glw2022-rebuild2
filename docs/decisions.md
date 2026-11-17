@@ -30,7 +30,7 @@ Summary:
 | D13 | GPS matching score | Scalar $\hat p_t$ for target level $t$ | M |
 | D14 | Trimming | None | M |
 | D15 | Definition of MSE; paper's DIF MSE | Standard MSE; paper's DIF MSE flagged as not an MSE | H (for comparison) |
-| D16 | Interval method for coverage | Deferred to Stage 4 | — |
+| D16 | Interval method for coverage | Settled in Stage 4: see D26 | — |
 | D17 | Replications and random numbers | 500 each; one L'Ecuyer-CMRG stream per replication | L |
 | D18 | Balance-diagnostic formulas | Out of scope; typos noted | — |
 | D19 | Extra measures not in the paper | Signed bias and MSE for Sim 1; empirical SD; MC SEs | — |
@@ -140,8 +140,8 @@ truth comes from population means, giving $\tau = 0$ for all 36 pairs. The CM
 evidence under D3 points the same way. Reporting (b) separates the estimators'
 own bias from the shift in estimand caused by the design.
 Values: Sim 1 $\tau_{super}$ = −1.5, −1, −1.5, 0.5, 0, −0.5 for pairs (1,2), (1,3),
-(1,4), (2,3), (2,4), (3,4). Sim 2 $\tau_{super} = 0$. $\tau_{mix}$ will be computed
-to high precision in Stage 2.
+(1,4), (2,3), (2,4), (3,4). Sim 2 $\tau_{super} = 0$. $\tau_{mix}$ was computed
+to high precision by Monte Carlo integration (`results/truth/`).
 
 ---
 
@@ -227,7 +227,7 @@ written. $Z_3$ (binary) is included in the $Z$ block.
 by analogy. The divisor ($n$ vs $n-1$) rescales both blocks by the same factor and
 cannot change the argmin.
 
-**Sensitivity check (after Stage 3, at your request).** CM was rerun under (b)
+**Sensitivity check (after Stage 3, at the author's request).** CM was rerun under (b)
 and (c) on the same 500 + 500 data sets (`results/cm_metric_sensitivity/`,
 `figures/cm_metric_sensitivity_sim2.png`). The metric makes little difference.
 Sim 2 mean |bias| is 0.299 (a), 0.304 (b) and 0.266 (c), against the paper's
@@ -278,14 +278,13 @@ which is misspecified. (b) The correctly specified model: linear plus the square
 terms that appear in some $\eta_t$, i.e. $x_1^2..x_4^2, z_1^2, z_2^2$. (c) The true
 $p_t$.
 
-**Choice.** (a), fitted by maximum likelihood in every replication. Possible
-sensitivity analyses: (b) and (c), run only if you approve them at Stage 3.
+**Choice.** (a), fitted by maximum likelihood in every replication. (b) and (c)
+were run as sensitivity analyses in Stage 3 (D25).
 
 **Reason.** The paper's conclusion implies a misspecified model, and (a) is the
-default an analyst would fit without knowing the DGP. Software: `nnet::multinom`
-(general model fitting, allowed by the brief) or a hand-written Newton–Raphson.
-This is to be decided and tested in Stage 2, with convergence checked in every
-replication.
+default an analyst would fit without knowing the DGP. Software: a hand-written
+Newton–Raphson, chosen in Stage 2 over `nnet::multinom` and checked against it,
+with convergence recorded in every replication (D22).
 
 ---
 
@@ -339,16 +338,15 @@ The inconsistency is reported, not copied.
 
 ---
 
-## D16. Interval method for coverage — deferred to Stage 4
+## D16. Interval method for coverage — see D26
 
 **Issue.** Tables 1 and 3 report coverage for CM and GPS (and none for DIF)
 without saying how intervals are built. The only hint is Table 5 (Section 6),
 where intervals are estimate ± 1.96 × "sd", with "sd" described as "the sample
 standard deviation". GPS coverage of 96–100% suggests conservative intervals.
 
-**Choice.** Not specified now. In Stage 4 (optional, after your OK) we will pick
-and justify a method derived from the estimator's form, e.g. a variance estimator
-derived for 1-NN imputation, or a resampling scheme, and report coverage.
+**Choice.** Deferred at Stage 1 and settled in Stage 4: an analytic variance
+derived from the estimator's form, with normal-approximation intervals (D26).
 
 ---
 
