@@ -282,6 +282,17 @@ stage 4 (commit `7b25857`). Later commits add figures, documentation (including
 this note) and a summary file, and change no results. The release tag `v1.0.0`
 marks the published state, which includes them.
 
+## Related repositories
+
+- [glw2022-matching-replication](https://github.com/wangqiu-syr/glw2022-matching-replication): the author's earlier rebuild of the
+  same simulations ("rebuild 1"), written independently of this one.
+- [glw2022-multilevelmatching-crosscheck](https://github.com/wangqiu-syr/glw2022-multilevelmatching-crosscheck):
+  a later, separate repository. It compares the two rebuilds with each other
+  and with Yang et al.'s (2016) `multilevelMatching` package.
+
+These links were added at release. This rebuild used neither repository (see
+Provenance).
+
 ## AI assistance
 
 Code, documentation and analyses were developed with Claude (Anthropic) as a
