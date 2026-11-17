@@ -222,7 +222,7 @@ g5 <- ggplot(d5, aes(value, estimator)) +
   facet_grid(sim ~ measure, scales = "free_x") + theme_viz() +
   labs(x = NULL, y = NULL, title = "All estimators, including the GPS sensitivity variants",
        subtitle = "Grey: one point per pairwise effect. Blue: mean over pairs. 500 replications.",
-       caption = "GPS: main-effects logit (primary). GPS_cs: correctly specified logit. GPS_true: true propensity scores.")
+       caption = "GPS: main-effects logit (primary). GPS_cs: correctly specified logit. GPS_true: population (true) propensity scores.")
 ggsave("figures/estimator_overview.png", g5, width = 9.5, height = 5.2, dpi = 200, bg = SURF)
 
 ## ---------------------------------------------------------------- report

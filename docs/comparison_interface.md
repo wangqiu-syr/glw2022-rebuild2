@@ -44,7 +44,7 @@ assumptions about them.
 | `CM` | covariates matching: 1-NN with replacement, Mahalanobis(X) + Mahalanobis(Z), pooled covariances |
 | `GPS` | GPS matching on the scalar $\hat p_t$ from a main-effects multinomial logit (primary) |
 | `GPS_cs` | as GPS, with a correctly specified logit (adds $x_1^2..x_4^2, z_1^2, z_2^2$) |
-| `GPS_true` | as GPS, on the true propensity scores |
+| `GPS_true` | as GPS, on the population (true) propensity scores of the data-generating model |
 | `CM_stacked` | CM with one Mahalanobis distance on (X, Z) |
 | `CM_xmahal_zeuclid` | CM with Mahalanobis(X) + Euclidean(Z) |
 

@@ -39,7 +39,7 @@ Summary:
 | D22 | Fitting the multinomial logit (Stage 2) | Hand-written Newton–Raphson, checked against `glm` and `nnet::multinom` | L |
 | D23 | Order and method of random draws (Stage 2) | X via Cholesky factor; T by inverse CDF; batches of 1000 | L |
 | D24 | Tie tolerance in matching (Stage 2) | Relative 1e-10 | L |
-| D25 | Sensitivity GPS models (agreed at Stage 1 review) | GPS_cs (correctly specified logit) and GPS_true (true scores) | — |
+| D25 | Sensitivity GPS models (agreed at Stage 1 review) | GPS_cs (correctly specified logit) and GPS_true (population scores, i.e. the true scores of the data-generating model) | — |
 
 ---
 
