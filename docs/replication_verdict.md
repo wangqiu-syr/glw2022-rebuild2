@@ -11,8 +11,8 @@ Monte Carlo SEs: bias at most 0.06; coverage near 95% about 1 point.
 The paper's qualitative claims about bias reduction and efficiency are
 reproduced. Its explanation for GPS's lower efficiency is not supported. One
 pattern in its tables is reversed: which matching estimator is less biased. Two
-columns of its Table 3 appear to contain reporting errors: the DIF "MSE" and the
-sign of the biases.
+columns of its Table 3 appear to follow different conventions from its own
+definitions: the DIF "MSE" and the sign of the biases.
 
 ![This rebuild vs. the paper at a glance](../figures/summary_vs_paper.png)
 
@@ -27,7 +27,7 @@ sign of the biases.
 | 7 | Which matching estimator is less biased (Tables 1, 3) | CM less biased in 6/6 and 32/36 pairs | CM less biased in 0/6 and 6/36 | **Not reproduced** (reversed) |
 | 8 | CM coverage in Sim 2 (Table 3) | 92–100% | 63–98% (mean 90.3%) | **Not reproduced**; follows from #7 |
 | 9 | GPS is less efficient "due to the misspecification of the propensity score modeling" (p. 978) | stated as a possible reason | correctly specified model: MSE ×1.08 (Sim 1), ×1.37 (Sim 2); true scores: ×2.4–2.7 | **Not supported** |
-| 10 | DIF "MSE" (Table 3) | 49–335 | 0.5–9.2; the paper's values are 0.81–1.00 × Var(Y\|t) + Var(Y\|t′) | **Reporting error** (D15) |
+| 10 | DIF "MSE" (Table 3) | 49–335 | 0.5–9.2; the paper's values are 0.81–1.00 × Var(Y\|t) + Var(Y\|t′) | **Different quantity** (D15) |
 | 11 | Sign of the bias (Table 3) | as printed | the printed signs match ours only after a sign flip (correlation −0.96 → +0.96) | **Convention reversed** relative to eq. (1) (D5) |
 
 ## Evidence
@@ -93,7 +93,7 @@ average. The under-coverage comes from CM's bias, not its SE (SE ratio 1.14).
 * Intervals for GPS matching that ignore propensity-score estimation are
   conservative here, so near-100% coverage is expected rather than a sign of
   good calibration.
-* Readers of Table 3 should treat its DIF MSE column as within-group variances,
+* Readers of Table 3 can read its DIF MSE column as within-group variances,
   and its bias signs as $E(\hat\tau(t',t)) - \tau(t',t)$.
 
 ## Reproduce

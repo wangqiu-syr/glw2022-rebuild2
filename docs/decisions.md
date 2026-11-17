@@ -29,7 +29,7 @@ Summary:
 | D12 | GPS model | Main-effects multinomial logit, fitted by ML in each replication | H |
 | D13 | GPS matching score | Scalar $\hat p_t$ for target level $t$ | M |
 | D14 | Trimming | None | M |
-| D15 | Definition of MSE; paper's DIF MSE | Standard MSE; paper's DIF MSE flagged as not an MSE | H (for comparison) |
+| D15 | Definition of MSE; paper's DIF MSE | Standard MSE; paper's DIF MSE flagged as a different quantity | H (for comparison) |
 | D16 | Interval method for coverage | Settled in Stage 4: see D26 | — |
 | D17 | Replications and random numbers | 500 each; one L'Ecuyer-CMRG stream per replication | L |
 | D18 | Balance-diagnostic formulas | Out of scope; typos noted | — |
@@ -325,7 +325,7 @@ $\mathrm{bias}^2 + \{\mathrm{Var}(Y\mid T=t)+\mathrm{Var}(Y\mid T=t')\}/200$,
 which is about 0.3–1.9 plus bias² (at most about 8 here). The paper's values are
 instead 0.81–1.00 times $\mathrm{Var}(Y\mid T=t)+\mathrm{Var}(Y\mid T=t')$ itself,
 computed under our DGP (`scripts/stage1_dgp_checks.R`, column `varsum`). That
-looks like a reporting error, e.g. not dividing by group size. The CM and GPS MSEs
+would fit, for example, variances not divided by group size. The CM and GPS MSEs
 (0.13–3.3) are of the size one would expect for an MSE.
 
 **Choice.** MSE $= R^{-1}\sum_r(\hat\tau_r-\tau)^2$ for every estimator. When
