@@ -291,7 +291,8 @@ marks the published state, which includes them.
   (doi:[10.5281/zenodo.24301013](https://doi.org/10.5281/zenodo.24301013)).
 - [glw2022-multilevelmatching-crosscheck](https://github.com/wangqiu-syr/glw2022-multilevelmatching-crosscheck):
   a later, separate repository. It compares the two rebuilds with each other
-  and with Yang et al.'s (2016) `multilevelMatching` package.
+  and with Yang et al.'s (2016) `multilevelMatching` package
+  (doi:[10.5281/zenodo.24301312](https://doi.org/10.5281/zenodo.24301312)).
 
 These links were added at release. This rebuild used neither repository (see
 Provenance).
