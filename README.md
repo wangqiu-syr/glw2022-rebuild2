@@ -20,8 +20,11 @@ simulation studies.
   0.11 vs the paper's 0.31. The CM distance metric is not the cause.
 - **Explanation not supported.** The paper attributes GPS's lower efficiency to
   a misspecified propensity model. A correctly specified model does not improve
-  it, and the true propensity scores make it worse. The reason is the
-  equal-group-size design: the population score does not balance the sample.
+  it, and matching on the population scores makes it worse. (The population
+  scores are the propensity scores of the data-generating model: correct for
+  the population, but not for a sample drawn with fixed group sizes.) The
+  reason is the equal-group-size design: the population score does not balance
+  the sample.
 - **Two reporting questions.** The DIF "MSE" column of Table 3 (49–335) is close
   to the sum of the two within-group outcome variances, rather than to an MSE of
   a difference in means. The printed bias signs appear reversed relative to the
@@ -119,7 +122,7 @@ largest Monte Carlo SE of a bias is 0.06.
 | CM | 0.17 / 0.14 | 0.36 | 0.30 / 0.14 | 0.29 / 0.37 |
 | GPS | 0.04 / 0.29 | 0.66 | 0.11 / 0.31 | 0.61 / 1.92 |
 | GPS, correctly specified logit | 0.04 | 0.71 | 0.10 | 0.84 |
-| GPS, true scores | 0.11 | 1.58 | 0.18 | 1.66 |
+| GPS, population scores | 0.11 | 1.58 | 0.18 | 1.66 |
 
 ![This rebuild vs. the paper at a glance](figures/summary_vs_paper.png)
 
@@ -129,7 +132,7 @@ Coverage of 95% intervals, mean [min, max] over pairs:
 |---|---|---|---|---|---|
 | CM | 94.5 [92.0, 97.2] | 95.0 [92, 98] | 90.3 [63.4, 98.0] | 97.1 [92, 100] | 1.05, 1.14 |
 | GPS | 99.8 [99.6, 100] | 99.7 [99, 100] | 99.7 [98.6, 100] | 98.9 [96, 100] | 1.58, 1.51 |
-| GPS, true scores | 94.4 | – | 94.2 | – | 0.98, 1.00 |
+| GPS, population scores | 94.4 | – | 94.2 | – | 0.98, 1.00 |
 | DIF | 86.9 | – | 79.8 | – | 0.98, 1.01 |
 
 - GPS over-covers because an SE that ignores propensity-score estimation is too
@@ -186,8 +189,10 @@ Rscript scripts/comparison_figures.R                                # summary fi
 Rscript scripts/export_summary_long.R                               # tidy summary for comparisons (from tracked tables only)
 ```
 
-The last argument is the number of cores. Each replication runs on its own
-L'Ecuyer-CMRG stream, so it reproduces whether run alone or in a batch. Runs
+The last argument is the number of cores. Each replication draws its random
+numbers from its own separate, reproducible stream (R's L'Ecuyer-CMRG
+generator; L'Ecuyer, Simard, Chen & Kelton, 2002, *Operations Research* 50(6),
+1073–1075), so it gives the same result whether run alone or in a batch. Runs
 save one file per replication and resume if interrupted. Those per-replication
 files (`results/runs*/`) are not tracked, but the combined estimates, intervals
 and performance tables that the reports are built from are. The 20-replication
@@ -216,12 +221,15 @@ bias and MSE, and intervals and coverage.
 - **Sampling each treatment group to a fixed size changes the propensity score
   within the sample.** The population score no longer balances the sample, so
   the score should be estimated from the sample itself. Here matching on the
-  true scores was the worst GPS variant.
-- **Every estimator here is a difference of per-treatment means, so its bias
-  must decompose as $h_t - h_{t'}$.** This one-line check validated all 126
-  transcribed bias cells. Stating the sign convention, the MSE definition and
-  the interval method in the table notes would have removed three of the
-  paper's ambiguities.
+  population scores was the worst GPS variant.
+- **Check transcribed tables against their structure.** Each pairwise bias is
+  the difference of two per-treatment quantities, $h_t - h_{t'}$, so each
+  estimator's 36 Simulation 2 biases are fixed by nine numbers, and its 6
+  Simulation 1 biases by four. All 126 transcribed bias values in Tables 1 and
+  3 fit this pattern to rounding, which confirms the transcription.
+- **Tables should state their conventions.** One line in the table notes,
+  giving the sign of the bias, what the MSE measures and the interval method,
+  would have settled three of the paper's ambiguities.
 
 ## Conclusions
 

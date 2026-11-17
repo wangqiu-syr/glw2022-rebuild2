@@ -26,7 +26,7 @@ definitions: the DIF "MSE" and the sign of the biases.
 | 6 | Sim 2 DIF biases (Table 3) | 36 values | correlation 0.96 (30/36 signs agree), but only 8/36 within 2 SE | **Pattern reproduced**; some values differ (D20) |
 | 7 | Which matching estimator is less biased (Tables 1, 3) | CM less biased in 6/6 and 32/36 pairs | CM less biased in 0/6 and 6/36 | **Not reproduced** (reversed) |
 | 8 | CM coverage in Sim 2 (Table 3) | 92–100% | 63–98% (mean 90.3%) | **Not reproduced**; follows from #7 |
-| 9 | GPS is less efficient "due to the misspecification of the propensity score modeling" (p. 978) | stated as a possible reason | correctly specified model: MSE ×1.08 (Sim 1), ×1.37 (Sim 2); true scores: ×2.4–2.7 | **Not supported** |
+| 9 | GPS is less efficient "due to the misspecification of the propensity score modeling" (p. 978) | stated as a possible reason | correctly specified model: MSE ×1.08 (Sim 1), ×1.37 (Sim 2); population scores: ×2.4–2.7 | **Not supported** |
 | 10 | DIF "MSE" (Table 3) | 49–335 | 0.5–9.2; the paper's values are 0.81–1.00 × Var(Y\|t) + Var(Y\|t′) | **Different quantity** (D15) |
 | 11 | Sign of the bias (Table 3) | as printed | the printed signs match ours only after a sign flip (correlation −0.96 → +0.96) | **Convention reversed** relative to eq. (1) (D5) |
 
@@ -62,15 +62,15 @@ lies in implementation details the paper does not give.
 
 **Propensity-score specification (#9).** Matching on a correctly specified
 multinomial logit gives about the same bias and a larger MSE. Matching on the
-true scores is worse still. Under equal group sizes, the probability of
-treatment $t$ within the sample is proportional to $p_t(x)/\pi_t$. That is not a
+population scores (the true scores of the data-generating model) is worse
+still. Under equal group sizes, the probability of treatment $t$ within the sample is proportional to $p_t(x)/\pi_t$. That is not a
 function of the population score $p_t(x)$ alone, so the population score does
 not balance the sample. A model fitted to the sample estimates the right score,
 and the correctly specified logit is exactly right for it, because only the
 intercepts shift.
 
 **GPS coverage (#5).** The analytic SE (D26) is calibrated when matching on the
-true scores: estimated SE / Monte Carlo SD = 0.98–1.00, coverage 94%. With
+population scores: estimated SE / Monte Carlo SD = 0.98–1.00, coverage 94%. With
 estimated scores the estimator varies much less (SD 0.76–0.79 vs 1.23–1.25), and
 an SE that ignores score estimation is about 1.5× too large. That gives coverage
 of 99.6–100%, matching the paper's near-100% values. The paper does not say how
