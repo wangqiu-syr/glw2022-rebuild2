@@ -2,6 +2,8 @@
 
 Qiu Wang, Syracuse University · v1.0.0 · November 2026
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24301219.svg)](https://doi.org/10.5281/zenodo.24301219)
+
 ## Key findings
 
 Guo, Liu and Wang (2022) propose two estimators of average treatment effects
@@ -285,7 +287,8 @@ marks the published state, which includes them.
 ## Related repositories
 
 - [glw2022-matching-replication](https://github.com/wangqiu-syr/glw2022-matching-replication): the author's earlier rebuild of the
-  same simulations ("rebuild 1"), written independently of this one.
+  same simulations ("rebuild 1"), written independently of this one
+  (doi:[10.5281/zenodo.24301013](https://doi.org/10.5281/zenodo.24301013)).
 - [glw2022-multilevelmatching-crosscheck](https://github.com/wangqiu-syr/glw2022-multilevelmatching-crosscheck):
   a later, separate repository. It compares the two rebuilds with each other
   and with Yang et al.'s (2016) `multilevelMatching` package.
@@ -313,7 +316,9 @@ checked the results and is responsible for the content.
 
 Wang, Q. (2026). *Multilevel covariates matching and generalized propensity score
 matching: An R rebuild of Guo, Liu and Wang's (2022) simulations* (Version 1.0.0)
-[Computer software]. GitHub. https://github.com/wangqiu-syr/glw2022-rebuild2
+[Computer software]. Zenodo. https://doi.org/10.5281/zenodo.24301219
+
+Code: https://github.com/wangqiu-syr/glw2022-rebuild2
 
 Original article: Guo, S., Liu, J., & Wang, Q. (2022). Effective learning during
 COVID-19: Multilevel covariates matching and propensity score matching. *Annals
