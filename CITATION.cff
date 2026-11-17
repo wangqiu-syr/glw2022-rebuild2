@@ -3,6 +3,7 @@ message: "If you use this software, please cite it as below."
 title: "Multilevel covariates matching and generalized propensity score matching: An R rebuild of Guo, Liu and Wang's (2022) simulations"
 version: 1.0.0
 date-released: 2026-11-17
+doi: 10.5281/zenodo.24301219
 license: MIT
 repository-code: "https://github.com/wangqiu-syr/glw2022-rebuild2"
 authors:
