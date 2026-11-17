@@ -238,6 +238,34 @@ The DIF MSE column and the bias signs of Table 3 appear to be reporting errors.
 An open implementation, with every interpretive choice recorded, is now
 available as a basis for applying and extending the methods.
 
+## Provenance
+
+This rebuild (rebuild 2) was made from these inputs only:
+
+- **The paper:** Guo, Liu & Wang (2022), as published. The PDF is not
+  redistributed.
+- **A written brief** from the author setting out the four stages, the
+  practical limits, and the rules below.
+- **Repository layout only:** after all four stages were complete, the public
+  repository [wangqiu-syr/sr08-replication](https://github.com/wangqiu-syr/sr08-replication)
+  was consulted for README structure and file organisation. It rebuilds a
+  different paper (Stuart & Rubin, 2008), and none of its methods content was
+  used.
+
+**Not used:** the original program of Guo, Liu & Wang (2022); any other rebuild
+or replication of this paper, including the author's earlier rebuild
+("rebuild 1"); online discussion of the paper; the works it cites, for how to
+implement its methods; and R packages that implement these matching estimators.
+General-purpose packages were used only for testing, for one reference check of
+the logit fit, and for figures (testthat, nnet, MASS, ggplot2).
+
+The work was done in one Claude Code session whose GitHub access covered only
+this repository, plus read access to sr08-replication once it was offered.
+Every interpretive choice is recorded, with its reason, in
+[`docs/decisions.md`](docs/decisions.md). Version 1.0.0 (tag `v1.0.0`) is the
+frozen state, and any later comparison with other rebuilds is made against that
+tag.
+
 ## AI assistance
 
 Code, documentation and analyses were developed with Claude (Anthropic) as a
